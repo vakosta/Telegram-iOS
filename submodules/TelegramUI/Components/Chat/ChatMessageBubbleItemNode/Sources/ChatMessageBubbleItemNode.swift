@@ -1381,15 +1381,15 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                 }
                 
                 if !strongSelf.backgroundNode.frame.contains(point) {
-                    return .waitForDoubleTap
+                    return .waitForSingleTap
                 }
                 
                 if strongSelf.currentMessageEffect() != nil {
-                    return .waitForDoubleTap
+                    return .waitForSingleTap
                 }
             }
             
-            return .waitForDoubleTap
+            return .waitForSingleTap
         }
         recognizer.longTap = { [weak self] point, recognizer in
             guard let strongSelf = self else {
@@ -5541,18 +5541,10 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                     case let .optionalAction(f):
                         f()
                     case let .openContextMenu(openContextMenu):
-                        if canAddMessageReactions(message: EngineMessage(openContextMenu.tapMessage)) {
-                            item.controllerInteraction.updateMessageReaction(openContextMenu.tapMessage, .default, false, nil)
-                        } else {
-                            item.controllerInteraction.openMessageContextMenu(openContextMenu.tapMessage, openContextMenu.selectAll, self, openContextMenu.subFrame, nil, nil)
-                        }
+                        item.controllerInteraction.openMessageContextMenu(openContextMenu.tapMessage, openContextMenu.selectAll, self, openContextMenu.subFrame, nil, nil)
                     }
                 } else if case .tap = gesture {
                     item.controllerInteraction.clickThroughMessage(self.view, location)
-                } else if case .doubleTap = gesture {
-                    if canAddMessageReactions(message: EngineMessage(item.message)) {
-                        item.controllerInteraction.updateMessageReaction(item.message, .default, false, nil)
-                    }
                 }
             }
         default:
